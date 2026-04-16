@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Profil XPrime</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg: #0b1120;
+            --card: rgba(17, 24, 39, 0.8);
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #e5e7eb;
+            --muted: #9ca3af;
+            --primary: #3b82f6;
+            --success: #10b981;
+        }
+        *, *::before, *::after { box-sizing: border-box; }
+        html, body {
+            width: 100%;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .hero-video {
+            position: relative;
+            width: 100%;
+            height: 40vh;
+            max-height: 24rem;
+            overflow: hidden;
+        }
+        .hero-video video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.4);
+            display: block;
+        }
+        .hero-video::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(0deg, var(--bg) 5%, transparent 60%);
+        }
+        .unmute-btn {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border: 1px solid var(--border);
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+            backdrop-filter: blur(8px);
+            z-index: 2;
+        }
+        .container {
+            width: 100%;
+            max-width: 42rem;
+            margin: -5rem auto 0 auto;
+            padding: 0 1rem 4rem 1rem;
+            position: relative;
+            z-index: 5;
+        }
+        .reveal {
+            opacity: 0;
+            transform: translateY(1.25rem);
+            transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .reveal.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .profile-card {
+            background: var(--card);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 1.5rem;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            border: 1px solid var(--border);
+            margin-bottom: 2rem;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+        }
+        .profile-card img {
+            width: 6.5rem;
+            height: 6.5rem;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary);
+            margin: -5rem auto 1.25rem;
+            background: var(--bg);
+            padding: 0.25rem;
+            display: block;
+        }
+        .profile-card h1 { font-size: 1.5rem; margin-bottom: 0.25rem; font-weight: 700; }
+        .birthdate {
+            font-size: 0.8rem;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+        }
+        .profile-card p {
+            color: var(--muted);
+            max-width: 35ch;
+            margin: 0 auto 1.5rem;
+            font-size: 0.9rem;
+        }
+        .section { margin-bottom: 2.5rem; }
+        .section-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text);
+        }
+        .section-title::before {
+            content: '';
+            width: 0.2rem;
+            height: 1rem;
+            background: var(--primary);
+            border-radius: 1rem;
+        }
+        .text-block {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 1.25rem;
+            font-size: 0.875rem;
+            color: var(--muted);
+            max-width: 65ch;
+        }
+        .text-block p + p { margin-top: 0.875rem; }
+        .link-grid { display: grid; gap: 0.75rem; }
+        .link-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1.25rem;
+            border-radius: 0.75rem;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.875rem;
+            background: var(--card);
+            color: var(--text);
+            border: 1px solid var(--border);
+            transition: all 0.2s ease;
+        }
+        .link-btn:active { transform: scale(0.98); }
+        .link-btn i { font-size: 1.1rem; width: 1.25rem; text-align: center; color: var(--primary); }
+
+        /* TIMELINE CERITA */
+        .timeline {
+            position: relative;
+            padding-left: 1.5rem;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0.3rem;
+            top: 0.25rem;
+            bottom: 0.25rem;
+            width: 2px;
+            background: var(--border);
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+        .timeline-item:last-child { margin-bottom: 0; }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -1.45rem;
+            top: 0.25rem;
+            width: 0.6rem;
+            height: 0.6rem;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 2px solid var(--bg);
+        }
+        .timeline-year {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+        .timeline-text {
+            font-size: 0.875rem;
+            color: var(--muted);
+        }
+
+        /* FAB DONASI */
+        .donate-fab {
+            position: fixed;
+            bottom: 1.25rem;
+            right: 1.25rem;
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4);
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            transition: all 0.3s ease;
+        }
+        .donate-fab:hover { transform: scale(1.1); }
+        .donate-fab::before {
+            content: 'Dukung Dev';
+            position: absolute;
+            right: 4rem;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.2s;
+        }
+        .donate-fab:hover::before { opacity: 1; }
+
+        /* MODAL DONASI */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s;
+        }
+        .modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            width: 100%;
+            max-width: 24rem;
+            transform: scale(0.9);
+            transition: 0.3s;
+        }
+        .modal.show .modal-content { transform: scale(1); }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .modal-header h3 { font-size: 1.1rem; font-weight: 700; }
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .donate-option {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+        }
+        .donate-option:last-child { margin-bottom: 0; }
+        .donate-option h4 {
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .dana-row {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        .dana-number {
+            flex: 1;
+            background: rgba(0,0,0,0.3);
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            font-family: monospace;
+            font-size: 0.9rem;
+            border: 1px solid var(--border);
+        }
+        .copy-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .copy-btn.copied { background: var(--success); }
+        .qris-img {
+            width: 100%;
+            border-radius: 0.75rem;
+            border: 1px solid var(--border);
+            display: block;
+        }
+
+        @media (min-width: 640px) {
+          .link-btn:hover {
+                background: rgba(255,255,255,0.08);
+                transform: translateY(-2px);
+                border-color: rgba(59, 130, 246, 0.3);
+          }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero-video">
+        <video id="bgVideo" autoplay muted loop playsinline>
+            <source src="https://c.termai.cc/a147/8TRa.mp4" type="video/mp4">
+        </video>
+        <button class="unmute-btn" id="unmuteBtn" onclick="toggleSound()">
+            <i class="fa-solid fa-volume-xmark"></i>
+        </button>
+    </div>
+
+    <main class="container">
+        <section class="profile-card reveal show">
+            <img src="https://c.termai.cc/a112/gbqYw.jpg" alt="Foto Profil">
+            <h1>XPrime</h1>
+            <div class="birthdate"><i class="fa-solid fa-cake-candles"></i> 22 Oktober 2010</div>
+            <p>Developer yang suka ngoding sambil mikirin finansial. Fokus di web dev dan jasa agar tidak merepotkan orang tua.</p>
+        </section>
+
+        <section class="section reveal">
+            <h3 class="section-title">Tentang Gue</h3>
+            <div class="text-block">
+                <p>Halo! Gue seorang developer yang demen banget sama dunia web dan mobile app. Udah 3 tahun ngulik JavaScript, React, sama Node.js.</p>
+                <p>Selain ngoding, gue juga aktif sebagai gamer di TikTok.</p>
+            </div>
+        </section>
+
+        <section class="section reveal">
+            <h3 class="section-title">Cerita Gue: Dari "Hacker" ke Web Dev</h3>
+            <div class="text-block">
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-year">2019 - Awal Penasaran</div>
+                        <div class="timeline-text">Kelas 2 SMP, pertama kali nonton film hacker. Langsung keinstall Kali Linux di laptop kentang. Niatnya mau jadi "hacker", tapi ternyata cuma bisa ganti wallpaper terminal jadi ijo-ijo.</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">2020 - Fase Sok Elite</div>
+                        <div class="timeline-text">Belajar Python gara-gara liat tutorial "bikin virus dalam 5 menit". Virusnya nggak jadi, yang jadi malah error `IndentationError`. Dari sini mulai sadar ngoding nggak semudah ngetik `hack_nasa.exe`.</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">2021 - Titik Balik</div>
+                        <div class="timeline-text">Iseng ikut lomba web design sekolah karena hadiahnya 500rb. Ternyata HTML + CSS lebih masuk akal daripada brute-force password. Menang juara 3, uangnya buat beli kuota. Sejak itu ngerasa "Eh bikin web ternyata cuan".</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">2022 - Sekarang</div>
+                        <div class="timeline-text">Full web dev. Hacker? Udah pensiun dini. Ternyata lebih seru debug JavaScript jam 3 pagi daripada nungguin `hydra` jalan 8 jam. Sekarang fokus bikin project biar nggak minta uang jajan lagi ke ortu.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section reveal">
+            <h3 class="section-title">Sosial Media</h3>
+            <div class="link-grid">
+                <a href="https://instagram.com/raxz_mpruy" class="link-btn" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-brands fa-instagram"></i>
+                    Instagram
+                </a>
+                <a href="https://tiktok.com/@xprime_ai" class="link-btn" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-brands fa-tiktok"></i>
+                    TikTok
+                </a>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- FAB DONASI -->
+    <button class="donate-fab" onclick="openDonate()">
+        <i class="fa-solid fa-hand-holding-heart"></i>
+    </button>
+
+    <!-- MODAL DONASI -->
+    <div class="modal" id="donateModal" onclick="closeDonate(event)">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Dukung XPrime</h3>
+                <button class="close-btn" onclick="closeDonate()">&times;</button>
+            </div>
+            
+            <div class="donate-option">
+                <h4><i class="fa-solid fa-wallet"></i> Via DANA</h4>
+                <div class="dana-row">
+                    <div class="dana-number" id="danaNum">081281116706</div>
+                    <button class="copy-btn" onclick="copyDana()">Copy</button>
+                </div>
+            </div>
+
+            <div class="donate-option">
+                <h4><i class="fa-solid fa-qrcode"></i> Via QRIS</h4>
+                <img src="https://c.termai.cc/a142/b5iYiq8.jpg" alt="QRIS XPrime" class="qris-img">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const bgVideo = document.getElementById('bgVideo');
+        const unmuteBtn = document.getElementById('unmuteBtn');
+        const donateModal = document.getElementById('donateModal');
+
+        function toggleSound() {
+            bgVideo.muted = !bgVideo.muted;
+            unmuteBtn.innerHTML = bgVideo.muted ? '<i class="fa-solid fa-volume-xmark"></i>' : '<i class="fa-solid fa-volume-high"></i>';
+        }
+
+        function openDonate() {
+            donateModal.classList.add('show');
+        }
+
+        function closeDonate(e) {
+            if (!e || e.target === donateModal) {
+                donateModal.classList.remove('show');
+            }
+        }
+
+        function copyDana() {
+            const num = document.getElementById('danaNum').innerText;
+            const btn = document.querySelector('.copy-btn');
+            navigator.clipboard.writeText(num).then(() => {
+                btn.innerText = 'Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.innerText = 'Copy';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('show');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.reveal:not(.show)').forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+</html>
