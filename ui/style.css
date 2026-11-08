@@ -1,1 +1,36 @@
-
+/* xs0ciety shared — neo-brutal */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root,[data-theme="light"]{
+  --bg:#F4F0E6;--bg2:#FFFEF9;--bg3:#EDE8DC;--surface:#FFFEF9;
+  --ink:#111;--text:#111;--text2:#5C5C5C;--text3:#7A7A7A;--muted:#5C5C5C;
+  --accent:#FF4D00;--accent2:#00B894;--accent3:#FFE566;--g:#FF4D00;--g2:#00B894;
+  --line:#111;--shadow:5px 5px 0 #111;--shadow-sm:3px 3px 0 #111;
+  --radius:8px;--font:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,Menlo,Consolas,monospace;color-scheme:light;
+}
+[data-theme="dark"]{
+  --bg:#0E0F0C;--bg2:#171A14;--bg3:#1F241C;--surface:#171A14;
+  --ink:#E8EDE4;--text:#E8EDE4;--text2:#9AA894;--text3:#6B7364;--muted:#9AA894;
+  --accent:#FF6B35;--accent2:#3DDC97;--accent3:#E8C547;--g:#FF6B35;--g2:#3DDC97;
+  --line:#E8EDE4;--shadow:5px 5px 0 #000;--shadow-sm:3px 3px 0 #000;
+  color-scheme:dark;
+}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 var(--font);min-height:100vh;
+  background-image:linear-gradient(rgba(17,17,17,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(17,17,17,.04) 1px,transparent 1px);
+  background-size:28px 28px;-webkit-font-smoothing:antialiased}
+[data-theme="dark"] body{background-image:linear-gradient(rgba(232,237,228,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(232,237,228,.04) 1px,transparent 1px)}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer}
+.page-wrapper{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1rem}
+.back-link{position:fixed;top:1.2rem;left:1.2rem;z-index:20;font-weight:800;font-size:.84rem;padding:8px 14px;
+  background:var(--surface);border:3px solid var(--line);box-shadow:var(--shadow-sm);border-radius:var(--radius);
+  display:inline-flex;align-items:center;gap:6px;transition:.15s;color:var(--ink)}
+.back-link:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--line);background:var(--accent3)}
+.theme-toggle{position:fixed;top:1.2rem;right:1.2rem;z-index:20;width:40px;height:40px;border:3px solid var(--line);
+  border-radius:8px;background:var(--surface);box-shadow:var(--shadow-sm);display:inline-flex;align-items:center;justify-content:center}
+.theme-toggle:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--line);background:var(--accent3)}
+.theme-toggle svg{width:18px;height:18px}
+.theme-toggle .sun{display:none}
+[data-theme="dark"] .theme-toggle .sun{display:block}
+[data-theme="dark"] .theme-toggle .moon{display:none}
